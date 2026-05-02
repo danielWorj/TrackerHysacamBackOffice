@@ -29,32 +29,39 @@ public class AlerteControllerImpl implements AlerteControllerInt {
 
     // GET /hysacam/api/alerte/all
     @Override
-    public ResponseEntity<Alerte> getAllAlerte() {
+    public ResponseEntity<List<Alerte>> getAllAlerteByPriority() {
         try {
             return ResponseEntity.ok()
-                    .body((Alerte) alerteRepository.findAll());
+                    .body((List<Alerte>) alerteRepository.findAllOrderByScoreDesc());
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
     }
 
-
-    // POST /hysacam/api/alerte/create
-
     @Override
     public ResponseEntity<ServerResponse> createAlerte(MultipartFile file) {
+        System.out.println("Image recu");
         ServerResponse response = new ServerResponse();
         try {
             // ── 1. Appel API Flask via AlerteService ──
             Signalement signalement = alerteService.analyse(file);
 
             // ── 2. Recherche de la poubelle la plus proche via Haversine ──
+
             Poubelle poubelleLaPlusProche = null;
+
+            System.out.println("Signalement reçu : " + signalement);
+
+            //signalement.setLatitude(4.050722273855027); // Valeurs fixes pour les tests
+            //signalement.setLongitude(9.751203437436407);
             if (signalement.getLatitude() != null && signalement.getLongitude() != null) {
                 poubelleLaPlusProche = trouverPoubelleLaPlusProche(
                         signalement.getLatitude(),
                         signalement.getLongitude()
                 );
+
+
+                System.out.println("La poubelle la plus proche : " + (poubelleLaPlusProche != null ? poubelleLaPlusProche.getNom() : "Aucune trouvée"));
             }
 
             // ── 3. Mapping Signalement → Alerte ──

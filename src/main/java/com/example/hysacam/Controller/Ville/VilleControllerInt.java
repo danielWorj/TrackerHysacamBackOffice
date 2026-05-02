@@ -1,5 +1,7 @@
 package com.example.hysacam.Controller.Ville;
 
+import com.example.hysacam.Entity.Info.Info;
+import com.example.hysacam.Entity.Info.TypeInfo;
 import com.example.hysacam.Entity.Server.ServerResponse;
 import com.example.hysacam.Entity.Ville.Quartier;
 import com.example.hysacam.Entity.Ville.Ville;
@@ -9,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("hysacam/api/ville")
+@RequestMapping("/api/hysacam/ville")
 @CrossOrigin("*")
 public interface VilleControllerInt {
     //Ville
@@ -37,4 +39,25 @@ public interface VilleControllerInt {
     @DeleteMapping("/quartier/delete/{id}")
     ResponseEntity<ServerResponse> deleteQuartier(@PathVariable Integer id) ;
 
+    //Info
+    @GetMapping("/info/all")
+    ResponseEntity<List<Info>> getAllInfo() ;
+    @PostMapping("/info/create")
+    ResponseEntity<ServerResponse> createInfo(@RequestParam("info") String info) ;
+    @PostMapping("/info/update")
+    ResponseEntity<ServerResponse> updateInfo(@RequestParam("info") String info) ;
+    @GetMapping("/info/get/{id}")
+    ResponseEntity<Info> getInfoById(@PathVariable Integer id) ;
+    @DeleteMapping("/info/delete/{id}")
+    ResponseEntity<ServerResponse> deleteInfo(@PathVariable Integer id) ;
+
+    //tYpeInfo
+    @GetMapping("/typeinfo/all")
+    ResponseEntity<List<TypeInfo>> getAllTypeInfo() ;
+    @PostMapping("/typeinfo/create")
+    ResponseEntity<ServerResponse> createTypeInfo(@RequestParam("typeinfo") String typeInfo) ;
+    @PostMapping("/typeinfo/update")
+    ResponseEntity<ServerResponse> updateTypeInfo(@RequestParam("typeinfo") String typeInfo) ;
+    @GetMapping("/typeinfo/get/{id}")
+    ResponseEntity<TypeInfo> getTypeInfoById(@PathVariable Integer id) ;
 }

@@ -13,8 +13,11 @@ public class Passage {
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Integer id ;
 
-    private LocalDate description ;
-    private Boolean status ;
+    private LocalDate datePassage ;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private StatusPassage status ;// en cours, terminee, annulee
     private String periode ;
 
     @ManyToOne(fetch = FetchType.LAZY)

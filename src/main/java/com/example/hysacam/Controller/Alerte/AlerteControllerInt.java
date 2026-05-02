@@ -6,11 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@RequestMapping("/hysacam/api/alerte")
+import java.util.List;
+
+@RequestMapping("/api/hysacam/alerte")
 @CrossOrigin("*")
 public interface AlerteControllerInt {
-    @GetMapping("/all")
-    ResponseEntity<Alerte> getAllAlerte() ;
+    @GetMapping("/all/bypriorite")
+    ResponseEntity<List<Alerte>> getAllAlerteByPriority() ;
     @PostMapping("/create")
     ResponseEntity<ServerResponse> createAlerte(@RequestParam("file")MultipartFile file) ;
     @DeleteMapping("/delete/{id}")

@@ -1,12 +1,13 @@
 package com.example.hysacam.Controller.Ville;
 
+import com.example.hysacam.Dto.InfoDTO;
 import com.example.hysacam.Dto.QuartierDTO;
+import com.example.hysacam.Entity.Info.Info;
+import com.example.hysacam.Entity.Info.TypeInfo;
 import com.example.hysacam.Entity.Server.ServerResponse;
 import com.example.hysacam.Entity.Ville.Quartier;
 import com.example.hysacam.Entity.Ville.Ville;
-import com.example.hysacam.Repository.PoubelleRepository;
-import com.example.hysacam.Repository.QuartierRepository;
-import com.example.hysacam.Repository.VilleRepository;
+import com.example.hysacam.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,10 @@ public class VilleControllerImpl implements VilleControllerInt {
     private QuartierRepository quartierRepository;
     @Autowired
     private PoubelleRepository poubelleRepository;
+    @Autowired
+    private InfoRepository infoRepository;
+    @Autowired
+    private TypeInfoRepository typeInfoRepository;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
@@ -82,6 +87,61 @@ public class VilleControllerImpl implements VilleControllerInt {
 
     @Override
     public ResponseEntity<ServerResponse> deleteQuartier(Integer id) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<List<Info>> getAllInfo() {
+        return ResponseEntity.ok(this.infoRepository.findAll());
+    }
+
+    @Override
+    public ResponseEntity<ServerResponse> createInfo(String info) {
+        InfoDTO infoDTO = this.objectMapper.readValue(info, InfoDTO.class);
+        Info infoDb = new Info();
+
+        infoDb.setTitre(infoDTO.getTitre());
+        infoDb.setTypeInfo(this.typeInfoRepository.findById(infoDb.getId()).orElse(null));
+        infoDb.setMessage(infoDb.getMessage());
+
+
+        this.infoRepository.save(infoDb);
+        return ResponseEntity.ok(new ServerResponse("Info created successfully", true));
+    }
+
+    @Override
+    public ResponseEntity<ServerResponse> updateInfo(String info) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Info> getInfoById(Integer id) {
+        return ResponseEntity.ok(this.infoRepository.findById(id).orElse(null));
+    }
+
+    @Override
+    public ResponseEntity<ServerResponse> deleteInfo(Integer id) {
+        this.infoRepository.deleteById(id);
+        return ResponseEntity.ok(new ServerResponse("Info deleted successfully", true));
+    }
+
+    @Override
+    public ResponseEntity<List<TypeInfo>> getAllTypeInfo() {
+        return ResponseEntity.ok(this.typeInfoRepository.findAll());
+    }
+
+    @Override
+    public ResponseEntity<ServerResponse> createTypeInfo(String typeInfo) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<ServerResponse> updateTypeInfo(String typeInfo) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<TypeInfo> getTypeInfoById(Integer id) {
         return null;
     }
 }
