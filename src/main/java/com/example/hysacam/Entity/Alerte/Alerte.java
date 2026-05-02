@@ -13,6 +13,8 @@ public class Alerte {
     private Integer id ;
     private String url ;
     private String status ;
+    private Double score ;
+    private Boolean etat ;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
