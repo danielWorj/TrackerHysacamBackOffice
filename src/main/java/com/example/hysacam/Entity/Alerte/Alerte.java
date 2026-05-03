@@ -14,7 +14,9 @@ public class Alerte {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id ;
     private String url ;
-    private String status ;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private StatutAlerte status ;
     private Double score ;
     private Boolean etat ;
 

@@ -6,6 +6,7 @@ import com.example.hysacam.Entity.Server.ServerResponse;
 import com.example.hysacam.Entity.Ville.Poubelle;
 import com.example.hysacam.Repository.AlerteRepository;
 import com.example.hysacam.Repository.PoubelleRepository;
+import com.example.hysacam.Repository.StatusAlerteRepository;
 import com.example.hysacam.Service.Alerte.AlerteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,8 @@ public class AlerteControllerImpl implements AlerteControllerInt {
 
     @Autowired
     private AlerteRepository alerteRepository;
+    @Autowired
+    private StatusAlerteRepository statusAlerteRepository;
 
     @Autowired
     private PoubelleRepository poubelleRepository;
@@ -32,7 +35,7 @@ public class AlerteControllerImpl implements AlerteControllerInt {
     public ResponseEntity<List<Alerte>> getAllAlerteByPriority() {
         try {
             return ResponseEntity.ok()
-                    .body((List<Alerte>) alerteRepository.findAllOrderByScoreDesc());
+                    .body((List<Alerte>) alerteRepository.findAllByOrderByScoreDesc());
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
@@ -70,9 +73,14 @@ public class AlerteControllerImpl implements AlerteControllerInt {
             alerte.setScore(signalement.getScore());
 
             alerte.setUrl(file.getOriginalFilename());
-            alerte.setStatus(
-                    Boolean.TRUE.equals(signalement.getStatus()) ? "URGENT" : "NORMAL"
-            );
+            if (signalement.getScore()> 0.8) {
+                alerte.setStatus(this.statusAlerteRepository.findById(1).orElse(null)); // URGENT
+            } else if (signalement.getScore() > 0.5 && signalement.getScore() <= 0.8) {
+                alerte.setStatus(this.statusAlerteRepository.findById(2).orElse(null)); // MOYEN
+            } else if (signalement.getScore() <= 0.5) {
+                alerte.setStatus(this.statusAlerteRepository.findById(3).orElse(null)); // FAIBLE
+
+            }
             alerte.setPoubelle(poubelleLaPlusProche); // peut être null si aucune en base
 
             // ── 4. Sauvegarde en base ──
